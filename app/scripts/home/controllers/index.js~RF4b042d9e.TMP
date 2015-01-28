@@ -1,0 +1,62 @@
+(function() {
+
+    function homeIndexController() {
+
+        this.parse = function(jsonString) {
+            try {
+                JSON.parse(jsonString)
+                this.jsonObject = angular.fromJson(jsonString, true);
+                this.getChildProperties(null);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        this.getChildProperties = function(propertyName) {
+
+        	var that = this;
+
+            function getProperties(jsonObject) {
+            	var properties = [];
+                for (prop in jsonObject) {
+                    if (that.jsonObject.hasOwnProperty(prop)) {
+                        properties.push({
+                            property: prop,
+                            level: that.properties.length
+                        });
+                    }
+                }
+                return properties
+            }
+
+            if (!propertyName && this.jsonObject) {
+                this.properties.push(getProperties(this.jsonObject));
+                return;
+            }
+
+            if (this.jsonObject && this.jsonObject[propertyName] && angular.isObject(this.jsonObject[propertyName])) {
+            	this.properties.push(getProperties(this.jsonObject[propertyName]));
+                return;	
+            }
+        }
+
+        this.selectProperty = function(selectedProperty) {
+            this.selectedProperties[selectedProperty.level] = this.selectedProperties[selectedProperty.level] || [];
+            var existingIndex = this.selectedProperties[selectedProperty.level].indexOf(selectedProperty.property);
+            if (existingIndex > -1) {
+                this.selectedProperties[selectedProperty.level].splice(existingIndex, 1);
+            } else {
+                this.selectedProperties[selectedProperty.level].push(selectedProperty.property);
+                this.getChildProperties(selectedProperty.property);
+            }
+        }
+
+        this.init = function() {
+        	this.properties = [];
+        	this.selectedProperties = [];
+        }
+    }
+
+    angular.module('jsonParser.home').controller('homeIndexController', homeIndexController);
+
+})()

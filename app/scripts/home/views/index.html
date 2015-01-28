@@ -1,0 +1,24 @@
+<div ng-controller="homeIndexController as index" ng-init="index.init()">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>JSON Input</label>
+                <textarea class="form-control" ng-model="index.input.json" ng-change="index.parse(index.input.json)" style="height: 300px"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            {{index.properties}}
+            <br /> {{index.selectedProperties}}
+            <div ng-repeat="propSet in index.properties">
+                <ul>
+                    <li ng-repeat="prop in propSet">
+                        <a href="" ng-click="index.selectProperty(prop, $parent.$index)">{{ prop }}</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

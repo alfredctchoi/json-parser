@@ -1,0 +1,45 @@
+(function() {
+
+    function homeIndexController() {
+
+        this.parse = function(jsonString) {
+            try {
+                JSON.parse(jsonString)
+                this.jsonObject = angular.fromJson(jsonString, true);
+                this.getChildProperties(null);
+            } catch (e) {
+            	console.log(e);
+            }
+        }
+
+        this.getChildProperties = function(propertyName) {
+            var properties = [];
+
+            if (!propertyName && this.jsonObject) {
+                for (prop in this.jsonObject) {
+                    if (this.jsonObject.hasOwnProperty(prop)) {
+                        properties.push({property: prop, level: 0});
+                    }
+                }
+                this.properties.push(properties);
+            }
+        }
+
+        this.selectProperty = function(property) {
+        	var existingIndex = this.selectedProperties[property.level].indexOf(property.property);
+        	this.selectedProperties[property.level] = this.selectedProperties[property.level] || [];
+        	if (existingIndex > -1){
+        		this.selectedProperties[property.level].splice(existingIndex, 1);
+        	} else {
+				this.selectedProperties[property.level].push(property.property);
+        	}
+        }
+
+        this.properties = [];
+        this.selectedProperties = [];
+
+    }
+
+    angular.module('jsonParser.home').controller('homeIndexController', homeIndexController);
+
+})()
