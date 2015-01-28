@@ -15,7 +15,7 @@
         this.getChildProperties = function(propertyName) {
 
             if (!propertyName && this.jsonObject) {
-                this.properties.push(parseUtility.getProperties(this.jsonObject));
+                this.properties[0] = parseUtility.getProperties(this.jsonObject);
                 return;
             }
 
